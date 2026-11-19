@@ -1,0 +1,19 @@
+# Relatórios, dados locais e backups
+Relatorios-atualizar/
+atualizacao-*.txt
+atualizacao-*.html
+atualizacao-*.json
+atualizar-backup-*/
+backup-*/
+backups/
+*.log
+*.crash
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.pfx
+.passwd
+.tokens
+__pycache__/
