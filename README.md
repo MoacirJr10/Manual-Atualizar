@@ -1,6 +1,6 @@
 # Atualizar 3.1 — Central de manutenção do Ubuntu
 
-![Versão 3.1](https://img.shields.io/badge/vers%C3%A3o-3.1-179c76) ![Ubuntu](https://img.shields.io/badge/SO-Ubuntu-E95420) ![Bash](https://img.shields.io/badge/Bash-script-4EAA25) ![Python](https://img.shields.io/badge/Python-3-3776AB)
+![Versão 3.1](https://img.shields.io/badge/vers%C3%A3o-3.1-179c76) ![Ubuntu](https://img.shields.io/badge/SO-Ubuntu-E95420) ![Bash](https://img.shields.io/badge/Bash-script-4EAA25) ![Python](https://img.shields.io/badge/Python-3-3776AB) [![Licença MIT](https://img.shields.io/badge/licen%C3%A7a-MIT-blue)](LICENSE)
 
 O **Atualizar** reúne atualização de pacotes, manutenção, diagnóstico e acompanhamento de hardware em uma interface interativa no terminal. O projeto foi desenvolvido a partir de problemas reais de manutenção de um computador Ubuntu e prioriza transparência, confirmação de operações sensíveis e relatórios locais.
 
@@ -99,11 +99,27 @@ Manual-Atualizar/
 ├── atualizar-v3.1.sh
 ├── Atualizar-3.1-Manual.pdf
 ├── SHA256SUMS
+├── LICENSE
+├── CONTRIBUTING.md
 └── .gitignore
 ```
 
-## Projeto e contribuições
+## Contribuições são sempre bem-vindas!
 
-Desenvolvido por [MoacirJr10](https://github.com/MoacirJr10). Sugestões e relatos de problemas podem ser enviados em [Issues](https://github.com/MoacirJr10/Manual-Atualizar/issues), informando versão do Ubuntu, versão da ferramenta e mensagens relevantes com dados privados removidos.
+O Atualizar é um projeto aberto à comunidade. Toda ajuda é bem-vinda, independentemente do seu nível de experiência. A ideia é evoluir a ferramenta em conjunto, tornando a manutenção do Ubuntu mais acessível, transparente e segura.
 
-A licença de distribuição ainda será definida pelo responsável pelo projeto. A publicação do código não implica, por si só, autorização de redistribuição ou modificação.
+Você pode contribuir com sugestões de funcionalidades, correções de bugs, melhorias no código e na documentação, traduções ou testes em outras versões do Ubuntu e configurações de hardware.
+
+- Abra uma [Issue](https://github.com/MoacirJr10/Manual-Atualizar/issues) para compartilhar ideias ou relatar problemas.
+- Faça um fork e envie um [Pull Request](https://github.com/MoacirJr10/Manual-Atualizar/pulls) para propor melhorias.
+- Consulte o [guia de contribuição](CONTRIBUTING.md) antes de enviar alterações e remova dados pessoais dos logs.
+
+Se a ferramenta foi útil para você, uma estrela no repositório ou o compartilhamento com outros usuários também ajuda o projeto a crescer. Obrigado a todos que contribuírem!
+
+## Licença
+
+Distribuído sob a [licença MIT](LICENSE). Você pode usar, estudar, modificar e redistribuir o software, inclusive comercialmente, desde que preserve o aviso de copyright e o texto da licença conforme seus termos. O software é fornecido sem garantias.
+
+## Autor
+
+Desenvolvido por [MoacirJr10](https://github.com/MoacirJr10).
