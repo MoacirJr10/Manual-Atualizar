@@ -1,0 +1,23 @@
+name: Verificar edições separadas (sem sudo)
+
+on:
+  pull_request:
+  push:
+    branches: ['feat/**', 'test/**']
+
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checar sintaxe dos scripts independentes
+        run: |
+          bash -n edicoes/ubuntu/atualizador-ubuntu.sh
+          bash -n edicoes/debian/atualizador-debian.sh
+          bash -n edicoes/arch/atualizador-arch.sh
+      - name: Simular gerenciadores e checar isolamento
+        run: python3 tests/test_edicoes.py
