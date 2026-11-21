@@ -1,125 +1,87 @@
-# Atualizar 3.1 — Central de manutenção do Ubuntu
+# Atualizador Linux — Ubuntu, Debian e Arch
 
-![Versão 3.1](https://img.shields.io/badge/vers%C3%A3o-3.1-179c76) ![Ubuntu](https://img.shields.io/badge/SO-Ubuntu-E95420) ![Bash](https://img.shields.io/badge/Bash-script-4EAA25) ![Python](https://img.shields.io/badge/Python-3-3776AB) [![Licença MIT](https://img.shields.io/badge/licen%C3%A7a-MIT-blue)](LICENSE)
+![Licença MIT](https://img.shields.io/badge/licen%C3%A7a-MIT-blue) ![Bash](https://img.shields.io/badge/Bash-script-4EAA25) ![Estado](https://img.shields.io/badge/estado-testes%20limitados-orange)
 
-O **Atualizar** reúne atualização de pacotes, manutenção, diagnóstico e acompanhamento de hardware em uma interface interativa no terminal. O projeto foi desenvolvido a partir de problemas reais de manutenção de um computador Ubuntu e prioriza transparência, confirmação de operações sensíveis e relatórios locais.
+Central open source de atualização, diagnóstico, limpeza opcional, monitoramento de hardware e relatórios locais.
 
-**[Manual completo em PDF](Atualizar-3.1-Manual.pdf)** · **[Código-fonte](atualizar-v3.1.sh)**
+> **AVISO IMPORTANTE — SOFTWARE NÃO AMPLAMENTE TESTADO.** As duas edições estão disponíveis para avaliação e contribuições, mas não foram validadas em grande variedade de distribuições, máquinas e cenários de atualização. Faça backup dos dados, leia o código e teste preferencialmente em máquina virtual. **Não recomendamos uso em servidores de produção.**
 
-## Recursos
+## Escolha a edição adequada
 
-- Atualização APT, Snap e Flatpak; simulação APT e limpeza opcional.
-- Diagnóstico de CPU, memória, armazenamento SMART, GPU, sensores e PWM.
-- Kernel, metapacotes HWE, Kdump, MOK e Secure Boot.
-- Serviços systemd, GNOME Keyring, AppArmor, rede e DNS.
-- Monitoramento com dez amostras; testes opcionais de CPU e RAM.
-- Backups privados de configurações; recuperação APT condicionada à confirmação.
-- Histórico, comparação entre relatórios do mesmo modo e exportação TXT, HTML e JSON.
+| Edição | Script | Suporte declarado | Maturidade |
+|---|---|---|---|
+| **Atualizador Ubuntu** | [`atualizador-ubuntu.sh`](atualizador-ubuntu.sh) | Ubuntu (`ID=ubuntu`) | Diagnósticos exercitados em Ubuntu 26.04.1; atualização/limpeza/recuperação sem validação ampla |
+| **Atualizador Ubuntu, Debian e Arch** | [`atualizador-ubuntu-debian-arch.sh`](atualizador-ubuntu-debian-arch.sh) | Ubuntu, Debian ou Arch (`ID` exato) | **Prévia experimental**; Debian: simulação isolada; Arch e Ubuntu: testes simulados da nova edição |
 
-## Requisitos
+Os identificadores técnicos continuam sendo **3.1 (Ubuntu)** e **3.2-preview (multiplataforma)**, mas os nomes dos arquivos descrevem onde cada edição funciona.
 
-Ubuntu, Bash, Python 3 (relatórios), terminal e acesso sudo para operações privilegiadas. Utilitários como `smartctl`, `sensors`, `nvidia-smi`, `stress-ng` e `memtester` são opcionais; algumas consultas dependem dos drivers e serviços disponíveis. O script não instala automaticamente utilitários ausentes.
+### 1. Atualizador Ubuntu
 
-Validado nos modos de consulta em Ubuntu 26.04.1 LTS, com Ryzen 5 7600X e RTX 3060. Há tratamento específico para a MSI MS-7E24; outros equipamentos podem apresentar sensores e resultados diferentes. Não há garantia de compatibilidade com todas as versões e configurações do Ubuntu.
-
-## Instalação
-
-Clone o repositório ou baixe os arquivos pelo botão **Code → Download ZIP**. Com Git:
+Script único para Ubuntu, baseado em APT/dpkg. Também consulta Snap e Flatpak quando instalados. Exemplos **sem alterar pacotes**:
 
 ```bash
-git clone https://github.com/MoacirJr10/Manual-Atualizar.git
-cd Manual-Atualizar
+bash -n atualizador-ubuntu.sh
+bash atualizador-ubuntu.sh --versao
+bash atualizador-ubuntu.sh --simular --sem-sudo
+bash atualizador-ubuntu.sh --hardware --sem-sudo
 ```
 
-Confira o código antes de executar. Verifique a integridade e a sintaxe:
+[Manual ilustrado da edição Ubuntu (PDF)](Manual-Atualizador-Ubuntu.pdf). O PDF foi escrito para a versão técnica 3.1; os comandos devem usar o novo nome do arquivo, ou o comando `atualizar` após instalação local.
+
+### 2. Atualizador Ubuntu, Debian e Arch — prévia experimental
+
+Núcleo compartilhado e backends isolados por distribuição:
+
+- **Ubuntu:** `lib/atualizar/ubuntu.sh` → `apt.sh` (APT/dpkg, com tratamento de faseamento).
+- **Debian:** `lib/atualizar/debian.sh` → `apt.sh` (APT/dpkg, sem pressupostos exclusivos do Ubuntu).
+- **Arch Linux:** `lib/atualizar/arch.sh` (`pacman -Syu` somente em atualização completa). **Não executa `pacman -Sy` isolado** nem atualiza AUR automaticamente.
+
+A prévia **não oferece garantia de simular integralmente as transações do pacman**; `--simular` no Arch lista atualizações possíveis, não valida previamente todos os conflitos. Derivados (Mint, Manjaro, EndeavourOS, Pop!_OS etc.) não são identificados automaticamente como suportados.
+
+Para consultar **sem instalar ou atualizar**:
+
+```bash
+bash -n atualizador-ubuntu-debian-arch.sh
+bash instalar.sh --verificar
+python3 tests/test_backends.py
+bash atualizador-ubuntu-debian-arch.sh --versao
+bash atualizador-ubuntu-debian-arch.sh --distro
+bash atualizador-ubuntu-debian-arch.sh --simular --sem-sudo
+bash atualizador-ubuntu-debian-arch.sh --hardware --sem-sudo
+```
+
+**Importante:** mantenha `lib/atualizar/` no mesmo diretório do script. O instalador opcional `instalar.sh` foi feito **somente para a edição multiplataforma**; antes de executá-lo, confira os arquivos e saiba que a instalação substitui `~/.local/bin/atualizar` **após sua confirmação e backup**. Para avaliar a prévia, prefira executá-la diretamente, sem instalar.
+
+## Recursos compartilhados
+
+- Atualização nativa (APT no Ubuntu/Debian e pacman no Arch), com confirmação e limpeza opcional.
+- Snap e Flatpak somente se instalados; atualização e operações sensíveis exigem autorização.
+- Diagnósticos de serviços, drivers, kernel, Kdump, assinatura de módulos, AppArmor, SMART e sensores.
+- Monitoramento de CPU, GPU, SSD, PWM e refrigeração quando os sensores estão disponíveis.
+- Simulação/consulta de pacotes, comparação e histórico de relatórios, exportações em TXT, HTML e JSON.
+- Rotinas opcionais de backup de configurações, testes de estabilidade e diagnóstico/recuperação de pacotes.
+
+**Não use o script com `sudo` à frente.** Ele solicita autorização somente quando o modo precisa. Revise as propostas de remoção. Em Arch, leia os [avisos oficiais](https://archlinux.org/news/) antes de `pacman -Syu`.
+
+## Limitações e testes realizados
+
+- **Ubuntu:** teste de diagnósticos, simulação e monitoramento em uma máquina Ubuntu 26.04.1 LTS. Atualizações reais, backups e recuperações da edição atual não receberam testes abrangentes.
+- **Debian:** execução de simulação não destrutiva no Debian 13 em ambiente isolado. Atualizações reais não testadas.
+- **Arch:** verificação de seleção do backend, simulação e chamada a `pacman -Syu` com comandos simulados. **Sem validação em instalação Arch real.**
+- **Multiplataforma:** não foi testada com atualizações reais, limpezas ou recuperação nas três distribuições. Não testada em ambientes de produção.
+
+**Status:** prévia para colaboração e revisão, não uma garantia de segurança ou compatibilidade. Sem telemetria; relatórios ficam em `~/Downloads/Relatorios-atualizar/` e podem conter dados privados. Não publique relatórios brutos nem backups.
+
+## Verificação de integridade
 
 ```bash
 sha256sum -c SHA256SUMS
-bash -n atualizar-v3.1.sh
-bash atualizar-v3.1.sh --versao
 ```
 
-Comece por um diagnóstico sem sudo:
+Arquivos excluídos do controle de versão por `.gitignore` não substituem a revisão manual do que será enviado ao Git.
 
-```bash
-bash atualizar-v3.1.sh --hardware --sem-sudo
-```
+## Contribuições e revisão de segurança
 
-Algumas informações serão omitidas sem privilégios. Para instalar o comando no seu usuário (se já existir `atualizar`, faça uma cópia antes):
+O projeto é aberto sob [licença MIT](LICENSE). **Sugestões, relatos de bugs, traduções e Pull Requests são sempre bem-vindos!** Leia [CONTRIBUTING.md](CONTRIBUTING.md). Mudanças devem ser revisadas antes de entrar na branch protegida `main`, especialmente comandos privilegiados, downloads, alterações de permissões ou rotinas de limpeza.
 
-```bash
-mkdir -p ~/.local/bin
-install -m 755 atualizar-v3.1.sh ~/.local/bin/atualizar
-~/.local/bin/atualizar --versao
-```
-
-Se `~/.local/bin` estiver no PATH, basta executar `atualizar`. Caso contrário, use o caminho completo ou adicione a pasta ao PATH do seu shell. Nunca execute `sudo atualizar`: a ferramenta solicita elevação internamente quando necessário.
-
-## Uso
-
-```bash
-atualizar
-```
-
-| Comando | Finalidade |
-|---|---|
-| `atualizar --diagnostico` | Diagnóstico completo |
-| `atualizar --simular` | Simular APT com os índices locais |
-| `atualizar --hardware` | Sensores, drivers e SMART |
-| `atualizar --rede` | Rede e DNS |
-| `atualizar --seguranca` | Consultas de segurança |
-| `atualizar --kernel` | HWE, Kdump, MOK e logs |
-| `atualizar --servicos` | Serviços e falhas de aplicativos |
-| `atualizar --monitor` | Dez amostras de monitoramento |
-| `atualizar --historico` | Relatórios recentes |
-| `atualizar --comparar` | Comparar relatórios finalizados do mesmo modo |
-| `atualizar --exportar` | Gerar HTML e JSON |
-| `atualizar --atualizar` | Atualização real de pacotes |
-| `atualizar --atualizar --limpeza` | Atualização com limpeza opcional |
-| `atualizar --recuperacao` | Recuperação APT com confirmação |
-| `atualizar --backup` | Copiar configurações para backup privado |
-| `atualizar --testes` | Testes curtos de CPU e RAM com confirmação |
-| `atualizar --ajuda` | Todas as opções |
-
-## Relatórios e segurança
-
-Os relatórios ficam na pasta de Downloads configurada pelo sistema, dentro de `Relatorios-atualizar/`. Os formatos de saída são TXT, HTML local e JSON. A classificação distingue achados normais, informativos, de atenção e críticos; um aviso não é, isoladamente, diagnóstico de defeito.
-
-- Faça backup dos dados antes de atualizar, limpar ou reparar pacotes. Essas ações podem alterar programas e reiniciar serviços. Leia as confirmações.
-- O programa não reinicia automaticamente o computador nem altera diretamente o GRUB, a BIOS, Secure Boot ou curvas de refrigeração. Não desativa AppArmor nem para/remove Nextcloud como correção de diagnóstico; uma atualização normal de Snap ainda pode atualizar aplicativos e reiniciar seus serviços.
-- Testes de carga podem aquecer ou travar máquinas instáveis. Não substituem testes prolongados. Os backups de configurações não incluem todos os dados do sistema e podem conter segredos; mantenha-os privados.
-- Os relatórios podem conter nomes de máquinas, IPs, aplicativos, caminhos e logs. Revise-os antes de compartilhar. Não publique relatórios brutos, backups ou credenciais.
-- Os diagnósticos, exportação e monitoramento foram exercitados no ambiente original. Os modos de atualização real, recuperação, backup e testes sob carga da versão 3.1 ainda necessitam de validação prática adicional.
-
-## Estrutura
-
-```text
-Manual-Atualizar/
-├── README.md
-├── atualizar-v3.1.sh
-├── Atualizar-3.1-Manual.pdf
-├── SHA256SUMS
-├── LICENSE
-├── CONTRIBUTING.md
-└── .gitignore
-```
-
-## Contribuições são sempre bem-vindas!
-
-O Atualizar é um projeto aberto à comunidade. Toda ajuda é bem-vinda, independentemente do seu nível de experiência. A ideia é evoluir a ferramenta em conjunto, tornando a manutenção do Ubuntu mais acessível, transparente e segura.
-
-Você pode contribuir com sugestões de funcionalidades, correções de bugs, melhorias no código e na documentação, traduções ou testes em outras versões do Ubuntu e configurações de hardware.
-
-- Abra uma [Issue](https://github.com/MoacirJr10/Manual-Atualizar/issues) para compartilhar ideias ou relatar problemas.
-- Faça um fork e envie um [Pull Request](https://github.com/MoacirJr10/Manual-Atualizar/pulls) para propor melhorias.
-- Consulte o [guia de contribuição](CONTRIBUTING.md) antes de enviar alterações e remova dados pessoais dos logs.
-
-Se a ferramenta foi útil para você, uma estrela no repositório ou o compartilhamento com outros usuários também ajuda o projeto a crescer. Obrigado a todos que contribuírem!
-
-## Licença
-
-Distribuído sob a [licença MIT](LICENSE). Você pode usar, estudar, modificar e redistribuir o software, inclusive comercialmente, desde que preserve o aviso de copyright e o texto da licença conforme seus termos. O software é fornecido sem garantias.
-
-## Autor
-
-Desenvolvido por [MoacirJr10](https://github.com/MoacirJr10).
+Autor: [MoacirJr10](https://github.com/MoacirJr10).

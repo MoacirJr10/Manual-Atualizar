@@ -1,0 +1,26 @@
+name: Testes de sintaxe e isolamento por distro
+
+on:
+  pull_request:
+  push:
+    branches:
+      - 'feat/**'
+      - 'test/**'
+
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validar Bash e integridade
+        run: |
+          bash -n atualizador-ubuntu-debian-arch.sh
+          bash -n instalar.sh
+          for f in lib/atualizar/*.sh; do bash -n "$f"; done
+          sha256sum -c SHA256SUMS
+      - name: Testar backends sem sudo ou alterações do sistema
+        run: python3 tests/test_backends.py

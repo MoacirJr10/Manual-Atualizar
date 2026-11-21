@@ -1,19 +1,14 @@
-# Relatórios, dados locais e backups
+# Relatórios e diagnósticos podem conter dados privados
 Relatorios-atualizar/
 atualizacao-*.txt
-atualizacao-*.html
 atualizacao-*.json
-atualizar-backup-*/
-backup-*/
-backups/
+atualizacao-*.html
 *.log
 *.crash
+*.bak
+*.backup
+__pycache__/
+*.pyc
+.venv/
 .env
 .env.*
-*.key
-*.pem
-*.p12
-*.pfx
-.passwd
-.tokens
-__pycache__/
