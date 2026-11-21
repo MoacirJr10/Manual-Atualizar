@@ -6,6 +6,12 @@ O **Atualizar** reúne atualização de pacotes, manutenção, diagnóstico e ac
 
 **[Manual completo em PDF](Atualizar-3.1-Manual.pdf)** · **[Código-fonte](atualizar-v3.1.sh)**
 
+## Edições separadas para cada distribuição (prévia experimental)
+
+**Cada sistema possui seu próprio programa:** [Atualizador Ubuntu](edicoes/ubuntu/atualizador-ubuntu.sh), [Atualizador Debian](edicoes/debian/atualizador-debian.sh) e [Atualizador Arch](edicoes/arch/atualizador-arch.sh). Não existe um executável único para as três distribuições: cada script recusa execução no sistema errado e usa somente o gerenciador nativo correspondente.
+
+**Atenção:** estas edições **3.2-preview não foram amplamente testadas**. Não há validação extensiva de atualizações, limpeza, recuperação nem testes de hardware reais em cada distribuição. Leia [instalação, diferenças e limitações](EDICOES-EXPERIMENTAIS.md) e faça backup antes de usar comandos privilegiados. A edição Ubuntu 3.1 original permanece disponível abaixo, sem alterações.
+
 ## Recursos
 
 - Atualização APT, Snap e Flatpak; simulação APT e limpeza opcional.
